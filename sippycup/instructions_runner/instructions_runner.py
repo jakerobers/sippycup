@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class InstructionsRunner(ABC):
     @abstractmethod
     def r(self, args):
@@ -20,4 +21,3 @@ class InstructionsRunner(ABC):
     @abstractmethod
     def di(self, args):
         pass
-

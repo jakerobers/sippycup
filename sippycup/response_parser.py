@@ -1,4 +1,4 @@
-class ResponseParser():
+class ResponseParser:
     def parse(self, response):
         response_lines = response.decode().split("\r\n")
         response_lines = response_lines[:-2]
@@ -48,7 +48,7 @@ class ResponseParser():
                 headers["Proxy-Authenticate"] = {
                     "type": auth_type,
                     "realm": realm,
-                    "nonce": nonce
+                    "nonce": nonce,
                 }
             elif line[0] == "Via":
                 headers["Via"] = line[1]
@@ -63,10 +63,7 @@ class ResponseParser():
                 seq_num = int(value[0])
                 method = value[1]
 
-                headers["CSeq"] = {
-                    "seq_num": seq_num,
-                    "method": method
-                }
+                headers["CSeq"] = {"seq_num": seq_num, "method": method}
             elif line[0] == "Contact":
                 headers["Contact"] = line[1]
             elif line[0] == "Content-Length":
@@ -76,6 +73,5 @@ class ResponseParser():
             "protocol_ver": protocol_ver,
             "status_code": int(status_code),
             "message": message,
-            "headers": headers
+            "headers": headers,
         }
-

@@ -4,6 +4,7 @@ from sippycup.utils import read_response
 from sippycup.response_parser import ResponseParser
 from sippycup.digest import Digest
 
+
 class TLSInstructionsRunner:
     def __init__(self, config, sock):
         self.config = config
@@ -14,7 +15,7 @@ class TLSInstructionsRunner:
     # Register command
     def r(self, args):
         reserved_port = self.sock.getsockname()[1]
-        args = {'reserved_port': reserved_port, 'c_seq': 2016, 'digest': None}
+        args = {"reserved_port": reserved_port, "c_seq": 2016, "digest": None}
         stream = self.tls_register_payload.payload(args)
         encoded_stream = stream.encode()
         self.sock.send(encoded_stream)
@@ -22,20 +23,20 @@ class TLSInstructionsRunner:
         response = ResponseParser().parse(response)
 
         # Assumes a 407 is returned. must follow up with another REGISTER
-        assert response['status_code'] == 407
+        assert response["status_code"] == 407
 
-        proxy_auth = response['headers']['Proxy-Authenticate']
+        proxy_auth = response["headers"]["Proxy-Authenticate"]
         auth_digest = Digest.generate_auth_header(
-            self.config['userinfo'],
-            self.config['password'],
-            proxy_auth['realm'],
-            proxy_auth['nonce'],
-            'REGISTER',
-            f'sip:{self.config["from_uri"]}'
+            self.config["userinfo"],
+            self.config["password"],
+            proxy_auth["realm"],
+            proxy_auth["nonce"],
+            "REGISTER",
+            f'sip:{self.config["from_uri"]}',
         )
-        args['digest'] = auth_digest
+        args["digest"] = auth_digest
 
-        args['c_seq'] = args['c_seq'] + 1
+        args["c_seq"] = args["c_seq"] + 1
         stream = self.tls_register_payload.payload(args)
         encoded_stream = stream.encode()
         self.sock.send(encoded_stream)
@@ -52,7 +53,7 @@ class TLSInstructionsRunner:
     # Invites recipient
     def i(self, to):
         reserved_port = self.sock.getsockname()[1]
-        args = {'reserved_port': reserved_port, 'c_seq': 2016, 'digest': None, 'to': to}
+        args = {"reserved_port": reserved_port, "c_seq": 2016, "digest": None, "to": to}
         stream = self.tls_invite_payload.payload(args)
         print(stream)
         encoded_stream = stream.encode()
@@ -62,19 +63,19 @@ class TLSInstructionsRunner:
         print(response)
 
         # Assumes a 407 is returned. must follow up with another INVITE
-        assert response['status_code'] == 407
-        proxy_auth = response['headers']['Proxy-Authenticate']
+        assert response["status_code"] == 407
+        proxy_auth = response["headers"]["Proxy-Authenticate"]
         auth_digest = Digest.generate_auth_header(
-            self.config['userinfo'],
-            self.config['password'],
-            proxy_auth['realm'],
-            proxy_auth['nonce'],
-            'REGISTER',
-            f'sip:{to}'
+            self.config["userinfo"],
+            self.config["password"],
+            proxy_auth["realm"],
+            proxy_auth["nonce"],
+            "REGISTER",
+            f"sip:{to}",
         )
-        args['digest'] = auth_digest
+        args["digest"] = auth_digest
 
-        args['c_seq'] = args['c_seq'] + 1
+        args["c_seq"] = args["c_seq"] + 1
         stream = self.tls_invite_payload.payload(args)
         print(stream)
         encoded_stream = stream.encode()
@@ -92,4 +93,3 @@ class TLSInstructionsRunner:
     # Declines invitation from inviter
     def di(self, args):
         raise NotImplementedError
-

@@ -29,3 +29,10 @@ Then you can run it with:
 ./sc --config ./config/testscript@myinstance123.json 'r;i=deskphone@myinstance123.some-pbx.net'
 ```
 
+## Development
+
+```
+poetry run black .
+poetry run flake8
+```
+

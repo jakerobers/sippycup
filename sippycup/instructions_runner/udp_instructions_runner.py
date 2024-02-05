@@ -35,8 +35,4 @@ class UDPInstructionsRunner:
         raise NotImplementedError
 
     def get_destination_address(self):
-        return (
-            self.config['proxy_host'],
-            int(self.config['proxy_port'])
-        )
-
+        return (self.config["proxy_host"], int(self.config["proxy_port"]))
